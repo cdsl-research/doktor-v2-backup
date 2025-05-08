@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: fulltext-elastic-backup-job
+  namespace: backup
+spec:
+  schedule: "00 15 * * *" # JST 00:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            node-role.kubernetes.io/master: "true"
+          containers:
+          - image: c0a22100/fulltext-elastic-backup:v4
+            name: fulltext-elastic-backup
+            imagePullPolicy: Always
+            volumeMounts:
+            - name: fulltext-elastic-backup-volume
+              mountPath: /backup
+          restartPolicy: Never
+          volumes:
+          - name: fulltext-elastic-backup-volume
+            hostPath:
+              path: /home/cdsl/backup/fulltext-elastic
+  successfulJobsHistoryLimit: 1

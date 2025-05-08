@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: thumbnail-minio-backup-job
+  namespace: backup
+spec:
+  schedule: "00 15 * * *" # JST 00:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            node-role.kubernetes.io/master: "true"
+          containers:
+          - image: c0a22100/thumbnail-minio-backup:v9
+            name: thumbnail-minio-backup
+            imagePullPolicy: Always
+            volumeMounts:
+            - name: thumbnail-minio-backup-volume
+              mountPath: /backup
+          restartPolicy: Never
+          volumes:
+          - name: thumbnail-minio-backup-volume
+            hostPath:
+              path: /home/cdsl/backup/thumbnail-minio
+  successfulJobsHistoryLimit: 1

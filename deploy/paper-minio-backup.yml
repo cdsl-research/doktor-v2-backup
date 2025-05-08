@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: paper-minio-backup-job
+  namespace: backup
+spec:
+  schedule: "00 15 * * *" # JST 00:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            node-role.kubernetes.io/master: "true"
+          containers:
+          - image: c0a22100/paper-minio-backup:v1
+            name: paper-minio-backup
+            imagePullPolicy: Always
+            volumeMounts:
+            - name: paper-minio-backup-volume
+              mountPath: /backup
+          restartPolicy: Never
+          volumes:
+          - name: paper-minio-backup-volume
+            hostPath:
+              path: /home/cdsl/backup/paper-minio
+  successfulJobsHistoryLimit: 1

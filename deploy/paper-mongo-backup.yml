@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: paper-mongo-backup-job
+  namespace: backup
+spec:
+  schedule: "00 15 * * *" # JST 00:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            node-role.kubernetes.io/master: "true"
+          containers:
+          - image: c0a22100/paper-mongo-backup:v1
+            name: paper-mongo-backup
+            imagePullPolicy: Always
+            volumeMounts:
+            - name: paper-mongo-backup-volume
+              mountPath: /backup/paper
+          restartPolicy: Never
+          volumes:
+          - name: paper-mongo-backup-volume
+            hostPath:
+              path: /home/cdsl/backup/paper-mongo
+  successfulJobsHistoryLimit: 1

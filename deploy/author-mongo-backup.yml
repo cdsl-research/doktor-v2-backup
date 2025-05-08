@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: author-mongo-backup-job
+  namespace: backup
+spec:
+  schedule: "00 15 * * *" # JST 00:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            node-role.kubernetes.io/master: "true"
+          containers:
+          - image: c0a22100/author-mongo-backup:latest
+            name: author-mongo-backup
+            imagePullPolicy: Always
+            volumeMounts:
+            - name: author-mongo-backup-volume
+              mountPath: /backup/author
+          restartPolicy: Never
+          volumes:
+          - name: author-mongo-backup-volume
+            hostPath:
+              path: /home/cdsl/backup/author-mongo
+  successfulJobsHistoryLimit: 1
