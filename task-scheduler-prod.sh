@@ -2,12 +2,12 @@ slack () {
   curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$1\"}" https://hooks.slack.com/services/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 || true
 }
 
-cd /volume1/doktor-dev-backup
+cd /volume1/doktor-prod-backup
 
-ENVIRONMENT="DEV"
-SRC_DIR="cdsl@doktor-m-v2:/home/cdsl/backup/"
+ENVIRONMENT="PROD"
+SRC_DIR="cdsl@clematis-main-master-mi:/home/cdsl/backup/"
 FIRST_BACKUP=$(ls | grep backup- | head -n 1)
-SSH_KEY="/volume1/doktor-dev-backup/id_ed25519"
+SSH_KEY="/volume1/doktor-prod-backup/id_ed25519"
 
 # rsyncコマンドで増分バックアップを行う
 # バックアップ先のディレクトリが空の場合は、最新のバックアップを取得する
