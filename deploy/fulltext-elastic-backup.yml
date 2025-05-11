@@ -11,8 +11,10 @@ spec:
         spec:
           nodeSelector:
             node-role.kubernetes.io/master: "true"
+          imagePullSecrets:
+          - name: regcred
           containers:
-          - image: c0a22100/fulltext-elastic-backup:v4
+          - image: ghcr.io/cdsl-research/fulltext-elastic-backup:1.0
             name: fulltext-elastic-backup
             imagePullPolicy: Always
             volumeMounts:
@@ -24,3 +26,4 @@ spec:
             hostPath:
               path: /home/cdsl/backup/fulltext-elastic
   successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1

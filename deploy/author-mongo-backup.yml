@@ -11,8 +11,10 @@ spec:
         spec:
           nodeSelector:
             node-role.kubernetes.io/master: "true"
+          imagePullSecrets:
+          - name: regcred
           containers:
-          - image: c0a22100/author-mongo-backup:latest
+          - image: ghcr.io/cdsl-research/author-mongo-backup:1.0
             name: author-mongo-backup
             imagePullPolicy: Always
             volumeMounts:
@@ -24,3 +26,4 @@ spec:
             hostPath:
               path: /home/cdsl/backup/author-mongo
   successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
