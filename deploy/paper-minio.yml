@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: paper-minio-backup-job
+  namespace: backup
+spec:
+  schedule: "00 15 * * *" # JST 00:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          # imagePullSecrets:
+          # - name: regcred
+          containers:
+          - name: paper-minio-backup
+            image: c0a22100/doktor-minio-backup:latest
+            # image: ghcr.io/cdsl-research/doktor-minio-backup:1.0
+            imagePullPolicy: Always
+            envFrom:
+            - configMapRef:
+                name: backup-config
+            env:
+            - name: MINIO_PORT
+              value: "30302"
+            - name: MINIO_OUTPUT
+              value: "paper"
+            volumeMounts:
+            - name: nfs-volume
+              mountPath: /backup
+          volumes:
+          - name: nfs-volume
+            nfs:
+              server: 192.168.100.3
+              path: /volume1/doktor-dev-backup/
+              # readOnly: false
+          restartPolicy: OnFailure
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1

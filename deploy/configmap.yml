@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-config
+  namespace: backup
+data:
+  HOST: "c0a22100-doktor-clone-master"
+  MONGO_USERNAME: "root"
+  MONGO_PASSWORD: "example"
+  MONGO_AUTHDB: "admin"
+  MINIO_USERNAME: "minio"
+  MINIO_PASSWORD: "minio123"
