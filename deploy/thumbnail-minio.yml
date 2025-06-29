@@ -9,20 +9,17 @@ spec:
     spec:
       template:
         spec:
-          # imagePullSecrets:
-          # - name: regcred
           containers:
           - name: thumbnail-minio-backup
-            image: c0a22100/doktor-minio-backup:latest
-            # image: ghcr.io/cdsl-research/doktor-minio-backup:1.0
+            image: ghcr.io/cdsl-research/doktor-minio-backup:v1.0
             imagePullPolicy: Always
             envFrom:
             - configMapRef:
-                name: backup-config
+                name: backup-common-config
             env:
             - name: MINIO_PORT
-              value: "30305"  # 後でNodePortに固定するようにする
-            - name: MINIO_OUTPUT
+              value: "30305"
+            - name: SERVICE_NAME
               value: "thumbnail"
             volumeMounts:
             - name: nfs-volume
@@ -32,7 +29,7 @@ spec:
             nfs:
               server: 192.168.100.3
               path: /volume1/doktor-dev-backup/
-              # readOnly: false
+              readOnly: false
           restartPolicy: OnFailure
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1

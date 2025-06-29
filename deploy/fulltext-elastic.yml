@@ -9,20 +9,17 @@ spec:
     spec:
       template:
         spec:
-          # imagePullSecrets:
-          # - name: regcred
           containers:
           - name: fulltext-elastic-backup
-            image: c0a22100/doktor-elastic-backup:latest
-            # image: ghcr.io/cdsl-research/mongo-backup:1.0
+            image: ghcr.io/cdsl-research/doktor-elasticsearch-backup:v1.1
             imagePullPolicy: Always
             envFrom:
             - configMapRef:
-                name: backup-config
+                name: backup-common-config
             env:
             - name: ELASTICSEARCH_PORT
               value: "30301"
-            - name: ELASTICSEARCH_OUTPUT
+            - name: SERVICE_NAME
               value: "fulltext"
             volumeMounts:
             - name: nfs-volume

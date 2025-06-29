@@ -9,24 +9,21 @@ spec:
     spec:
       template:
         spec:
-          # imagePullSecrets:
-          # - name: regcred
           containers:
           - name: stats-mongo-backup
-            image: c0a22100/doktor-mongo-backup:latest
-            # image: ghcr.io/cdsl-research/doktor-mongo-backup:1.0
+            image: ghcr.io/cdsl-research/doktor-mongo-backup:v1.1
             imagePullPolicy: Always
             envFrom:
             - configMapRef:
-                name: backup-config
+                name: backup-common-config
             env:
             - name: MONGO_PORT
-              value: "30304" # 後でNodePortに固定するようにする
+              value: "30304"
             - name: MONGO_DB
               value: "stats"
             - name: MONGO_COLLECTION
               value: "stats"
-            - name: MONGO_OUTPUT
+            - name: SERVICE_NAME
               value: "stats"
             volumeMounts:
             - name: nfs-volume
@@ -36,7 +33,7 @@ spec:
             nfs:
               server: 192.168.100.3
               path: /volume1/doktor-dev-backup/
-              # readOnly: false
+              readOnly: false
           restartPolicy: OnFailure
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
